@@ -3,12 +3,12 @@
 var model = {
   watchlistItems: [],
   browseItems: []
-}
+};
 
 
 var api = {
   root: "https://api.themoviedb.org/3",
-  token: "TODO", // TODO 0 add your api key
+  token: "34e2e693ed24dc7e0fd3fc2f2f05ccf6", // TODO 0 add your api key -DONE
   /**
    * Given a movie object, returns the url to its poster image
    */
@@ -16,7 +16,7 @@ var api = {
     var baseImageUrl = "http://image.tmdb.org/t/p/w300/";
     return baseImageUrl + movie.poster_path; 
   }
-}
+};
 
 
 /**
@@ -26,11 +26,11 @@ var api = {
  * the callback function that was passed in
  */
 
-// TODO 1
+// TODO 1 -DONE
 // this function should accept a second argument, `keywords`
-function discoverMovies(callback) {
+function discoverMovies(callback, keywords) {
 
-  // TODO 2 
+  // TODO 2 -DONE
   // ask the API for movies related to the keywords that were passed in above
   // HINT: add another key/value pair to the `data` argument below
 
@@ -38,6 +38,7 @@ function discoverMovies(callback) {
     url: api.root + "/discover/movie",
     data: {
       api_key: api.token,
+      with_keywords: keywords
     },
     success: function(response) {
       model.browseItems = response.results;
@@ -55,51 +56,58 @@ function discoverMovies(callback) {
  * the API's response.
  */
 function searchMovies(query, callback) {
-  // TODO 3
-  // change the url so that we search for keywords, not movies
-
-
-  // TODO 4
-  // when the response comes back, do all the tasks below:
-
-
-  // TODO 4a
-  // create a new variable called keywordIDs whose value is an array of all the
-  // `.id` values of each of the objects inside reponse.results
-  // HINT use the array map function to map over response.results
-
-
-  // TODO 4b
-  // create a new variable called keywordsString by converting 
-  // the array of ids to a comma-separated string, e.g.
-  //      "192305,210090,210092,210093"
-  // HINT: use the Array join function
-
-
-  // TODO 4c
-  // instead of a comma-separated string, we want the ids
-  // to be spearated with the pipe "|" character, eg:
-  //     "192305|210090|210092|210093"
-  // HINT: pass an argument to the join function
-
-
-  // TODO 4d
-  // when the response comes back, call discoverMovies, 
-  // passing along 2 arguments:
-  // 1) the callback 
-  // 2) the string of keywords
 
 
   $.ajax({
-    url: api.root + "/search/movie",
+    url: api.root + "/search/keyword",
     data: {
       api_key: api.token,
       query: query
     },
     success: function(response) {
       console.log(response);
+      // TODO 3-DONE
+      // change the url so that we search for keywords, not movies
+
+
+      // TODO 4
+      // when the response comes back, do all the tasks below:
+
+
+      // TODO 4a -DONE
+      // create a new variable called keywordIDs whose value is an array of all the
+      // `.id` values of each of the objects inside reponse.results
+      // HINT use the array map function to map over response.results
+      var keywordIDs = response.results.map(function(i){
+        return i.id;
+      });
+
+
+      // TODO 4b -DONE
+      // create a new variable called keywordsString by converting 
+      // the array of ids to a comma-separated string, e.g.
+      //      "192305,210090,210092,210093"
+      // HINT: use the Array join function
+      var keywordsString = keywordIDs.join("|");
+
+
+      // TODO 4c -DONE
+      // instead of a comma-separated string, we want the ids
+      // to be spearated with the pipe "|" character, eg:
+      //     "192305|210090|210092|210093"
+      // HINT: pass an argument to the join function
+
+
+      // TODO 4d -DONE
+      // when the response comes back, call discoverMovies, 
+      // passing along 2 arguments:
+      // 1) the callback 
+      // 2) the string of keywords
+      discoverMovies(callback,keywordsString);
     }
   });
+
+
 }
 
 
